@@ -9,7 +9,7 @@ namespace InventoryLibrary
     public class Product
     {
         private int _ProductID;
-        public string NameProduct;
+        private string NameProduct;
         public decimal UnitPrice;
         public double NumberUnits;
 

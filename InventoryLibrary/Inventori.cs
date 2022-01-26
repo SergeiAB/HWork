@@ -43,8 +43,7 @@ namespace InventoryLibrary
         //удаление из списка по выбранному ID товара
         public void DeleteProduct(List<Product> product,int IDProduct)
         {
-            int index = GetIndex (product,IDProduct);
-            product.RemoveAt(index);
+            product.RemoveAll(x => x.ProductID == IDProduct);
 
         }
 
@@ -61,8 +60,14 @@ namespace InventoryLibrary
             }
             return index;
         }
+
+        
+
+
+
+
     }
 
-    
+        
    
 }

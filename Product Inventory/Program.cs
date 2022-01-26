@@ -23,8 +23,8 @@ namespace Product_Inventory
         static void Main(string[] args)
         {
             List<Product> SheetProduct;
-            FileIOService FileIO = new (Path);
-            Inventori inventori=new();
+            FileIOService FileIoService = new FileIOService(Path);
+            Inventori inventori=new Inventori();
             Menu menu = Menu.Load;
             Console.Title = "Ведомость по инвентаризации";
             MenuShow();
@@ -35,13 +35,30 @@ namespace Product_Inventory
                     case Menu.Load:
                         {
                             Console.WriteLine(menu.ToString());
-                            SheetProduct = FileIO.LoadData();
-                            //inventori.PrintSheet(SheetProduct);
+                            SheetProduct = FileIoService.LoadData();
+                            if(SheetProduct == null)
+                            {
+                                Console.WriteLine("В списке товаров нет записей !!!\nДобавте новую запись в список:");
+                               
+                                menu=Menu.Add;
+                                continue;
+                            }
+                            else
+                            {
+                                inventori.PrintSheet(SheetProduct);
+                            }
                             break;
+
                         }
                     case Menu.Add:
                         {
-                            Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Введите наименование товара, не более 15 символов:");
+                            string NameProduct = IsTextNullLen(Console.ReadLine(), "Ошибка ввода, попробуйте еще раз:");
+                            Console.WriteLine(NameProduct);
+                            Console.WriteLine("Введите количество едениц товара:");
+
+                            Console.WriteLine("Введите стоимость еденицы товара:");
+
                             break;
                         }
                     case Menu.Delete:
@@ -100,6 +117,24 @@ namespace Product_Inventory
             Console.WriteLine();
         }
 
+        //Проверка наименования
+        static string IsTextNullLen(string Text, string Messag)
+        {   
+            while (String.IsNullOrEmpty(Text))
+            {
+                Console.WriteLine(Messag);
+                Text=Console.ReadLine();
+            }
+            if (Text.Length > 15)
+            {
+                Text=Text.Substring(0,15);
+            }
+                //напписание с большой буквы
+            char tmp =Char.ToUpper(Text[0]);
+            Text= Text.Substring(1,Text.Length-1).ToLower();
+            return$"{tmp}{Text}";
+
+        }
 
         //метод для проверки вводимых значений с консоли на число и по условию >= minValue & <= maxValue
         static int CheckEnterNumber(string enterText, string message, int minValue = int.MinValue, int maxValue = int.MaxValue)

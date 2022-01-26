@@ -29,7 +29,7 @@ namespace InventoryLibrary
 
                 }//создание файла по указанному пути
                 
-                Console.WriteLine("Create file " + _path);
+                //Console.WriteLine("Create file " + _path);
                 return null;
                  
             }
