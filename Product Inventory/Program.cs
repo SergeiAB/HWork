@@ -4,7 +4,7 @@ using InventoryLibrary;
 
 namespace Product_Inventory
 {   
-    internal class Program
+    public class Program
     {
         public enum Menu
         {
@@ -22,11 +22,12 @@ namespace Product_Inventory
         
         static void Main(string[] args)
         {
-            List<Product> SheetProduct;
-            FileIOService FileIoService = new FileIOService(Path);
+            List<Product> SheetProduct = new();
+            FileIOService FileIoService = new(Path);
             Inventori inventori=new Inventori();
             Menu menu = Menu.Load;
             Console.Title = "Ведомость по инвентаризации";
+            string msgError = "Ошибка ввода, попробуйте еще раз:";
             MenuShow();
             do
             {
@@ -36,11 +37,12 @@ namespace Product_Inventory
                         {
                             Console.WriteLine(menu.ToString());
                             SheetProduct = FileIoService.LoadData();
-                            if(SheetProduct == null)
+                            if(SheetProduct.Count == 0)
                             {
                                 Console.WriteLine("В списке товаров нет записей !!!\nДобавте новую запись в список:");
                                
                                 menu=Menu.Add;
+                               
                                 continue;
                             }
                             else
@@ -52,28 +54,50 @@ namespace Product_Inventory
                         }
                     case Menu.Add:
                         {
+                            Console.WriteLine(menu.ToString());
+                            
+
                             Console.WriteLine("Введите наименование товара, не более 15 символов:");
-                            string NameProduct = IsTextNullLen(Console.ReadLine(), "Ошибка ввода, попробуйте еще раз:");
-                            Console.WriteLine(NameProduct);
+                            string NameProduct=Console.ReadLine();
+                            
+                            NameProduct = IsTextNullLen(NameProduct, msgError);
+                            
                             Console.WriteLine("Введите количество едениц товара:");
-
+                            string NumUnit = Console.ReadLine();
+                           
+                            double NumberUnits = CheckEnterNumber(NumUnit, msgError,0.001);
+                            
+                            
                             Console.WriteLine("Введите стоимость еденицы товара:");
-
+                            string PriceUnit = Console.ReadLine();
+                            
+                            decimal UnitPrice = (decimal)CheckEnterNumber(PriceUnit, msgError,0.01);
+                           
+                            SheetProduct.Add(new Product(NameProduct, UnitPrice,NumberUnits ,SheetProduct));
+                            inventori.PrintSheet(SheetProduct);
                             break;
                         }
                     case Menu.Delete:
                         {
                             Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Введите инвентарный №\nдля удаления товара:");
+                            int ProductID = CheckEnterNumber(Console.ReadLine(), msgError, 1);
+                            inventori.DeleteProduct(SheetProduct, ProductID);
+
                             break;
                         }
                     case Menu.Save:
                         {
                             Console.WriteLine(menu.ToString());
+                            FileIoService.SaveData(SheetProduct);
+                            SheetProduct = FileIoService.LoadData();
+                            inventori.PrintSheet(SheetProduct);
                             break;
                         }
                     case Menu.PrintConsol:
                         {
                             Console.WriteLine(menu.ToString());
+                            inventori.PrintSheet(SheetProduct);
                             break;
                         }
                     case Menu.Close:
@@ -120,38 +144,59 @@ namespace Product_Inventory
         //Проверка наименования
         static string IsTextNullLen(string Text, string Messag)
         {   
+            Text=Text.Trim(' ','\t');
             while (String.IsNullOrEmpty(Text))
             {
                 Console.WriteLine(Messag);
-                Text=Console.ReadLine();
+                Text=Console.ReadLine().Trim(' ','\t');
             }
+            Text = Text.Trim().ToLower();
             if (Text.Length > 15)
             {
                 Text=Text.Substring(0,15);
             }
-                //напписание с большой буквы
-            char tmp =Char.ToUpper(Text[0]);
-            Text= Text.Substring(1,Text.Length-1).ToLower();
+                //написание с большой буквы
+            char tmp = char.ToUpper(Text[0]);
+            Text= Text.Substring(1,Text.Length-1);
             return$"{tmp}{Text}";
 
         }
 
-        //метод для проверки вводимых значений с консоли на число и по условию >= minValue & <= maxValue
-        static int CheckEnterNumber(string enterText, string message, int minValue = int.MinValue, int maxValue = int.MaxValue)
+        //метод для проверки вводимых значений с консоли на число и по условию > minValue
+        static double CheckEnterNumber(string enterText, string message, double minValue)
+        {
+            bool flag;
+            double number;
+            do
+            {
+                flag = double.TryParse(enterText, out number);
+                if (!flag || number < minValue)
+                {
+                    Console.WriteLine(message);
+                    flag = false;
+                    enterText = Console.ReadLine();
+                }
+
+            } while (!flag);
+            return Math.Round(number,3);
+        }
+
+        static int CheckEnterNumber(string enterText, string message, int minValue)
         {
             bool flag;
             int number;
             do
             {
                 flag = int.TryParse(enterText, out number);
-                if (!flag || number < minValue || number > maxValue)
+                if (!flag||number<minValue)
                 {
                     Console.WriteLine(message);
                     flag = false;
                     enterText = Console.ReadLine();
                 }
+
             } while (!flag);
-            return number;
+                return number;
         }
 
         // перехват клавиш управления

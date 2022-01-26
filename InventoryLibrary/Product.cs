@@ -9,7 +9,7 @@ namespace InventoryLibrary
     public class Product
     {
         private int _ProductID;
-        private string NameProduct;
+        public string NameProduct;
         public decimal UnitPrice;
         public double NumberUnits;
 
@@ -24,7 +24,7 @@ namespace InventoryLibrary
         public int ProductID
         {
             get { return _ProductID; }
-            private set { _ProductID = value; }
+            set { _ProductID = value; }
         }
 
         //стоимость в одной позиции товара
@@ -38,7 +38,7 @@ namespace InventoryLibrary
         {   
         int i=0;
         int id=1;
-            if (products.Count > 0)
+            if (products!=null && products.Count > 0 )
             {
                 int[] ArrayID = new int[products.Count];
                 foreach(Product prd in products)
