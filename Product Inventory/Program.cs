@@ -14,7 +14,6 @@ namespace Product_Inventory
             Save,//записать в файл
             Close,//закрыть программу
             Load,//считаь данные из файла
-            Esc,//отменить зменения
             Null,
             Summ//сумма выбранных товаров
         }
@@ -78,12 +77,16 @@ namespace Product_Inventory
                         }
                     case Menu.Delete:
                         {
-                            Console.WriteLine("Удалить запись из таблицы...");
-                            Console.WriteLine("Введите инвентарный №\nдля удаления товара:");
-                            int DeleteProdID = CheckEnterNumber(Console.ReadLine(), msgError, 1);
+                            Console.WriteLine("Удалить запись из таблицы списком...");
+                            //Console.WriteLine("Введите инвентарный №\nдля удаления товара:");
+                            //int DeleteProdID = CheckEnterNumber(Console.ReadLine(), msgError, 1);
+                            //Console.WriteLine();
+                            //inventori.DeleteProduct(SheetProduct, DeleteProdID);
+                            Console.WriteLine("введите ID товаров через \"+\" например 2+4+7 или 4:");
+                            string Summ = Console.ReadLine();
                             Console.WriteLine();
-                            inventori.DeleteProduct(SheetProduct, DeleteProdID);
-               
+                            Summ = IsTextNullLen(Summ, msgError);
+                            inventori.DeleteProduсtList(SheetProduct,Summ); 
                             break;
                         }
                     case Menu.Save:
@@ -116,11 +119,7 @@ namespace Product_Inventory
                             Console.WriteLine("Выберите действия из МЕНЮ:");
                             break;
                         }
-                    case Menu.Esc:
-                        {
-                            Console.WriteLine(menu.ToString());
-                            break;
-                        }
+                   
 
                 }
                 menu = GetMenu();
@@ -257,11 +256,6 @@ namespace Product_Inventory
                         {
                             menu = Menu.Load;
                         }
-                        break;
-                    }
-                case ConsoleKey.Escape:
-                    {
-                        menu = Menu.Esc;
                         break;
                     }
                 case ConsoleKey.T:

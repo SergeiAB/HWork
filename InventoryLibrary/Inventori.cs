@@ -85,9 +85,9 @@ namespace InventoryLibrary
         //сумирует товары
         public void SummProdukt(List<Product> product, string strKitsummId)
         {       
-            string[] str = strKitsummId.Trim('+').Split('+');
+            string[] str = strKitsummId.Trim('+').Split('+');//закидываем в массив строку из символов
             int[] IDprod = new int[str.Length];
-            for (int i = 0; i < str.Length; i++)
+            for (int i = 0; i < str.Length; i++)//в массив int копируем строчный массив
             {
                 try
                 {
@@ -95,15 +95,15 @@ namespace InventoryLibrary
                 }
                 catch(Exception Ex) 
                 { 
-                    Console.WriteLine(Ex.Message);
+                    Console.WriteLine(Ex.Message);//сообщение о неправильном ID продукта
                     return;
                 }
             }
-            List<Product> ProdSumm = new List<Product>();
+            List<Product> ProdSumm = new List<Product>();//создаем новый список
             for (int i = 0; i < IDprod.Length; i++)
             {
                 if (product.Exists(x => x.ProductID == IDprod[i]))
-                {
+                {   //добавляем в список соответствующие товары с ID  из массива
                      ProdSumm.Add(product.Find(x => x.ProductID == IDprod[i]));
 
                 }
@@ -117,7 +117,33 @@ namespace InventoryLibrary
             PrintSheet(ProdSumm);
         }
 
-        
+        public void DeleteProduсtList(List<Product> product, string strKitsummId)
+        {
+            string[] str = strKitsummId.Trim('+').Split('+');//закидываем в массив строку из символов
+            int[] IDprod = new int[str.Length];
+            for (int i = 0; i < str.Length; i++)//в массив int копируем строчный массив
+            {
+                try
+                {
+                    IDprod[i] = int.Parse(str[i]);
+                }
+                catch (Exception Ex)
+                {
+                    Console.WriteLine(Ex.Message);//сообщение о неправильном ID продукта
+                    return;
+                }
+            }
+            //List<Product> ProdSumm = new List<Product>();//создаем новый список
+            for (int i = 0; i < IDprod.Length; i++)
+            {
+
+                DeleteProduct(product, IDprod[i]);
+
+            }
+            Console.WriteLine("Осталось продуктов  в списке....");
+            PrintSheet(product);
+            Console.WriteLine("Сохранить изменеия CTRL+S.\nОтменить изменения CTRL+L.");
+        }
 
 
 
