@@ -25,25 +25,46 @@ namespace InventoryLibrary
         }
 
         //Печать списка товаров в ведомости
-        public void PrintSheet(List<Product> product)
+        public void PrintSheet(List<Product> product, bool total=true, bool title =true)
         {
-            Console.WriteLine(new String('-', 70));
-            Console.WriteLine("| {0,-5} | {1,-15} | {2,-10} | {3,-12} | {4,-12} |", "Инв №", "Наименование", "Кол-во ед.", "Цена за ед.", "Всего:");
+            if (title)
+            {
+                Console.WriteLine(new String('-', 70));
+                Console.WriteLine("| {0,-5} | {1,-15} | {2,-10} | {3,-12} | {4,-12} |", "Инв №", "Наименование", "Кол-во ед.", "Цена за ед.", "Всего:");
+            }
+            
             Console.WriteLine(new String('-', 70));
             foreach (Product prod in product)
             {
                 Console.WriteLine(prod.ToString());
                 Console.WriteLine(new String('-', 70));
             }
-            decimal total = TotalPrice(product);
-            Console.WriteLine("|{0,52} | {1,12} |", "Итого:", total.ToString("c2"));
-            Console.WriteLine(new String('-', 70));
+
+            if (total)
+            {
+                decimal inTotal = TotalPrice(product);
+                Console.WriteLine("|{0,52} | {1,12} |", "Итого:", inTotal.ToString("c2"));
+                Console.WriteLine(new String('-', 70));
+            }
+            
         }
 
+
         //удаление из списка по выбранному ID товара
-        public void DeleteProduct(List<Product> product,int IDProduct)
+        public void DeleteProduct(List<Product> product,int DeleteProdID)
         {
-            product.RemoveAll(x => x.ProductID == IDProduct);
+            if (product.Exists(x => x.ProductID == DeleteProdID))
+            {
+                var print = product.FindAll(x => x.ProductID == DeleteProdID);
+                Console.WriteLine($"Вы удалили Продукт с ID= {DeleteProdID}");
+                PrintSheet(print,false,false);
+                product.RemoveAll(x => x.ProductID == DeleteProdID);
+            }
+            else
+            {
+                Console.WriteLine($"Продукта с ID= {DeleteProdID} в списке нет!\nДля удаления выберите CTRL+D.");
+            }
+            
 
         }
 
@@ -60,6 +81,8 @@ namespace InventoryLibrary
             }
             return index;
         }
+        
+        
 
         
 

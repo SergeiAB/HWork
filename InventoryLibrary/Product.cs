@@ -63,12 +63,12 @@ namespace InventoryLibrary
             return ProductID;
         }
 
-        //public bool Equals(Product prod)
-        //{
-        //    if (prod == null) return false;
-        //    Product tmp = prod as Product;
-        //    return ProductID == tmp.ProductID;
-        //}
+        public bool Equals(Product prod)
+        {
+            if (prod == null) return false;
+            Product tmp = prod as Product;
+            return ProductID == tmp.ProductID;
+        }
 
         public override bool Equals(object obj)
         {

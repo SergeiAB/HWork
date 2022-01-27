@@ -35,7 +35,7 @@ namespace Product_Inventory
                 {
                     case Menu.Load:
                         {
-                            Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Загрузка данных из файла.....");
                             SheetProduct = FileIoService.LoadData();
                             if (SheetProduct.Count == 0)
                             {
@@ -54,7 +54,7 @@ namespace Product_Inventory
                         }
                     case Menu.Add:
                         {
-                            Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Добавить новую запись в таблицу....");
 
 
                             Console.WriteLine("Введите наименование товара, не более 15 символов:");
@@ -79,16 +79,17 @@ namespace Product_Inventory
                         }
                     case Menu.Delete:
                         {
-                            Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Удалить запись из таблицы...");
                             Console.WriteLine("Введите инвентарный №\nдля удаления товара:");
-                            int ProductID = CheckEnterNumber(Console.ReadLine(), msgError, 1);
-                            inventori.DeleteProduct(SheetProduct, ProductID);
+                            int DeleteProdID = CheckEnterNumber(Console.ReadLine(), msgError, 1);
 
+                            inventori.DeleteProduct(SheetProduct, DeleteProdID);
+               
                             break;
                         }
                     case Menu.Save:
                         {
-                            Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Сохранить текущие изменения в файл....");
                             FileIoService.SaveData(SheetProduct);
                             SheetProduct = FileIoService.LoadData();
                             inventori.PrintSheet(SheetProduct);
@@ -96,7 +97,7 @@ namespace Product_Inventory
                         }
                     case Menu.PrintConsol:
                         {
-                            Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Печать текущей таблицы....");
                             inventori.PrintSheet(SheetProduct);
                             break;
                         }
@@ -117,14 +118,8 @@ namespace Product_Inventory
                         }
 
                 }
-
-
-
                 menu = GetMenu();
-
-
             } while (menu != Menu.Close);
-
         }
 
 
