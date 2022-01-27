@@ -82,7 +82,40 @@ namespace InventoryLibrary
             return index;
         }
         
-        
+        //сумирует товары
+        public void SummProdukt(List<Product> product, string strKitsummId)
+        {       
+            string[] str = strKitsummId.Trim('+').Split('+');
+            int[] IDprod = new int[str.Length];
+            for (int i = 0; i < str.Length; i++)
+            {
+                try
+                {
+                    IDprod[i] = int.Parse(str[i]);
+                }
+                catch(Exception Ex) 
+                { 
+                    Console.WriteLine(Ex.Message);
+                    return;
+                }
+            }
+            List<Product> ProdSumm = new List<Product>();
+            for (int i = 0; i < IDprod.Length; i++)
+            {
+                if (product.Exists(x => x.ProductID == IDprod[i]))
+                {
+                     ProdSumm.Add(product.Find(x => x.ProductID == IDprod[i]));
+
+                }
+                else
+                {
+                    Console.WriteLine($"Товара с ID={IDprod[i]} в списке нет....");
+                    return;
+                }
+
+            }
+            PrintSheet(ProdSumm);
+        }
 
         
 

@@ -51,6 +51,8 @@ namespace InventoryLibrary
         return id;
 
         }
+
+        //переопределения методов
         public override string ToString()
         {
             decimal Amount = AmountPrice();

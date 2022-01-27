@@ -15,7 +15,8 @@ namespace Product_Inventory
             Close,//закрыть программу
             Load,//считаь данные из файла
             Esc,//отменить зменения
-            Null
+            Null,
+            Summ//сумма выбранных товаров
         }
 
         static string Path = $"{Environment.CurrentDirectory}\\InventDataList.json";
@@ -55,22 +56,20 @@ namespace Product_Inventory
                     case Menu.Add:
                         {
                             Console.WriteLine("Добавить новую запись в таблицу....");
-
-
                             Console.WriteLine("Введите наименование товара, не более 15 символов:");
                             string NameProduct = Console.ReadLine();
-
+                            Console.WriteLine();
                             NameProduct = IsTextNullLen(NameProduct, msgError);
-
+                            Console.WriteLine();
                             Console.WriteLine("Введите количество едениц товара:");
                             string NumUnit = Console.ReadLine();
-
+                            Console.WriteLine();
                             double NumberUnits = CheckEnterNumber(NumUnit, msgError, 0.001);
 
-
+                            Console.WriteLine();
                             Console.WriteLine("Введите стоимость еденицы товара:");
                             string PriceUnit = Console.ReadLine();
-
+                            Console.WriteLine();
                             decimal UnitPrice = (decimal)CheckEnterNumber(PriceUnit, msgError, 0.01);
 
                             SheetProduct.Add(new Product(NameProduct, UnitPrice, NumberUnits, SheetProduct));
@@ -82,7 +81,7 @@ namespace Product_Inventory
                             Console.WriteLine("Удалить запись из таблицы...");
                             Console.WriteLine("Введите инвентарный №\nдля удаления товара:");
                             int DeleteProdID = CheckEnterNumber(Console.ReadLine(), msgError, 1);
-
+                            Console.WriteLine();
                             inventori.DeleteProduct(SheetProduct, DeleteProdID);
                
                             break;
@@ -101,9 +100,15 @@ namespace Product_Inventory
                             inventori.PrintSheet(SheetProduct);
                             break;
                         }
-                    case Menu.Close:
+                    case Menu.Summ:
                         {
-                            Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Сложение стоимости товаров...");
+                            Console.WriteLine("введите ID товаров через \"+\" например 2+4+7:");
+                            string Summ = Console.ReadLine();
+                            Console.WriteLine();
+                            Summ = IsTextNullLen(Summ,msgError);
+                            inventori.SummProdukt(SheetProduct, Summ);
+                            
                             break;
                         }
                     case Menu.Null:
@@ -127,12 +132,13 @@ namespace Product_Inventory
         static void MenuShow()
         {
             Console.WriteLine("--МЕНЮ" + new String('-', 28));
-            Console.WriteLine("| Добавить новую запись: CTRL+A   " + "|\n" +
-                "| Удалить запись: CTRL+D          " + "|\n" +
-                "| Показать список товаров: CTRL+P " + "|\n" +
-                "| Сохранить изменения: CTRL+S     " + "|\n" +
-                "| Закрыть программу: CTRL+Q       " + "|\n" +
-                "| Загрузить файл: CTRL+L          " + "|");
+            Console.WriteLine("| Добавить новую запись: CTRL+A       |\n" +
+                              "| Удалить запись: CTRL+D              |\n" +
+                              "| Стоимость выбранных товаров: CTRL+T |\n" +
+                              "| Показать список товаров: CTRL+P     |\n" +
+                              "| Сохранить изменения: CTRL+S         |\n" +
+                              "| Закрыть программу: CTRL+Q           |\n" +
+                              "| Загрузить файл: CTRL+L              |");
             Console.Write(new String('-', 34));
             Console.WriteLine();
         }
@@ -140,7 +146,7 @@ namespace Product_Inventory
         //Проверка наименования
         static string IsTextNullLen(string Text, string Messag)
         {
-            Text = Text.Trim(' ', '\t');
+            Text = Text.Trim(' ', '\t','\n');
             while (String.IsNullOrEmpty(Text))
             {
                 Console.WriteLine(Messag);
@@ -256,6 +262,14 @@ namespace Product_Inventory
                 case ConsoleKey.Escape:
                     {
                         menu = Menu.Esc;
+                        break;
+                    }
+                case ConsoleKey.T:
+                    {
+                        if ((keyEnter.Modifiers & ConsoleModifiers.Control) != 0)
+                        {
+                            menu = Menu.Summ;
+                        }
                         break;
                     }
 
