@@ -15,6 +15,7 @@ namespace Product_Inventory
             Close,//закрыть программу
             Load,//считаь данные из файла
             Null,
+            Change,//изменить данные
             Summ//сумма выбранных товаров
         }
 
@@ -24,7 +25,7 @@ namespace Product_Inventory
         {
             List<Product> SheetProduct = new();
             FileIOService FileIoService = new(Path);
-            Inventori inventori = new Inventori();
+            Inventori inventori = new();
             Menu menu = Menu.Load;
             Console.Title = "Ведомость по инвентаризации";
             string msgError = "Ошибка ввода, попробуйте еще раз:";
@@ -54,23 +55,28 @@ namespace Product_Inventory
                         }
                     case Menu.Add:
                         {
+                            //Console.Clear();
                             Console.WriteLine("Добавить новую запись в таблицу....");
                             Console.WriteLine("Введите наименование товара, не более 15 символов:");
                             string NameProduct = Console.ReadLine();
-                            Console.WriteLine();
+                            
                             NameProduct = IsTextNullLen(NameProduct, msgError);
-                            Console.WriteLine();
+                           
                             Console.WriteLine("Введите количество едениц товара:");
                             string NumUnit = Console.ReadLine();
-                            Console.WriteLine();
+                            
                             double NumberUnits = CheckEnterNumber(NumUnit, msgError, 0.001);
-                            Console.WriteLine();
+                           
                             Console.WriteLine("Введите стоимость еденицы товара:");
                             string PriceUnit = Console.ReadLine();
-                            Console.WriteLine();
+                           
                             decimal UnitPrice = (decimal)CheckEnterNumber(PriceUnit, msgError, 0.01);
-                            SheetProduct.Add(new Product(NameProduct, UnitPrice, NumberUnits, SheetProduct));
+
+                           
+                            int IdProduct = IDGenerator.GetID(SheetProduct);
+                            SheetProduct.Add(new Product(NameProduct, UnitPrice, NumberUnits,IdProduct));
                             inventori.PrintSheet(SheetProduct);
+                            
                             break;
                         }
                     case Menu.Delete:
@@ -78,7 +84,7 @@ namespace Product_Inventory
                             Console.WriteLine("Удалить запись из таблицы списком...");
                             Console.WriteLine("введите ID товаров через \"-\" например 2-4-7 или 4:");
                             string Summ = Console.ReadLine();
-                            Console.WriteLine();
+                           
                             Summ = IsTextNullLen(Summ, msgError);
                             inventori.DeleteProduсtList(SheetProduct,Summ); 
                             break;
@@ -102,7 +108,7 @@ namespace Product_Inventory
                             Console.WriteLine("Сложение стоимости товаров...");
                             Console.WriteLine("введите ID товаров через \"+\" например 2+4+7:");
                             string Summ = Console.ReadLine();
-                            Console.WriteLine();
+                            
                             Summ = IsTextNullLen(Summ,msgError);
                             inventori.SummProduktList(SheetProduct, Summ);
                             break;
@@ -112,7 +118,11 @@ namespace Product_Inventory
                             Console.WriteLine("Выберите действия из МЕНЮ:");
                             break;
                         }
-                   
+                    case Menu.Change:
+                        {
+                            Console.WriteLine(menu.ToString());
+                            break;
+                        }
 
                 }
                 menu = GetMenu();
@@ -123,26 +133,27 @@ namespace Product_Inventory
         //Вывод на консоль клавиш управления програмой
         static void MenuShow()
         {
-            Console.WriteLine("--МЕНЮ" + new String('-', 28));
-            Console.WriteLine("| Добавить новую запись: CTRL+A       |\n" +
-                              "| Удалить запись: CTRL+D              |\n" +
-                              "| Стоимость выбранных товаров: CTRL+T |\n" +
-                              "| Показать список товаров: CTRL+P     |\n" +
-                              "| Сохранить изменения: CTRL+S         |\n" +
-                              "| Закрыть программу: CTRL+Q           |\n" +
-                              "| Загрузить файл: CTRL+L              |");
-            Console.Write(new String('-', 34));
+            Console.WriteLine("--МЕНЮ" + new String('-', 33));
+            Console.WriteLine("| Добавить новую запись: ALT+A        |\n" +
+                              "| Удалить запись: ALT+D               |\n" +
+                              "| Стоимость выбранных товаров: ALT+T  |\n" +
+                              "| Показать список товаров: ALT+P      |\n" +
+                              "| Сохранить изменения: ALT+S          |\n" +
+                              "| Закрыть программу: CTRL+С           |\n" +
+                              "| Измениь продукт: ALT+Q              |\n" +
+                              "| Загрузить файл: ALT+L               |");
+            Console.Write(new String('-', 39));
             Console.WriteLine();
         }
 
         //Проверка наименования
         static string IsTextNullLen(string Text, string Messag)
         {
-            Text = Text.Trim(' ', '\t','\n');
-            while (String.IsNullOrEmpty(Text))
+            Text = Text.Trim(' ');
+            while (string.IsNullOrEmpty(Text))
             {
                 Console.WriteLine(Messag);
-                Text = Console.ReadLine().Trim(' ', '\t');
+                Text = Console.ReadLine().Trim(' ');
             }
             Text = Text.Trim().ToLower();
             if (Text.Length > 15)
@@ -179,15 +190,15 @@ namespace Product_Inventory
         static Menu GetMenu()
         {
             // Не допускать выхода из программы при нажатии CTRL+C.
-            Console.TreatControlCAsInput = true;
+            //Console.TreatControlCAsInput = true;
 
             Menu menu = Menu.Null;
-            ConsoleKeyInfo keyEnter = Console.ReadKey(true);
+            ConsoleKeyInfo keyEnter = Console.ReadKey(true); 
             switch (keyEnter.Key)
             {
                 case ConsoleKey.D:
                     {
-                        if ((keyEnter.Modifiers & ConsoleModifiers.Control) != 0)
+                        if ((keyEnter.Modifiers & ConsoleModifiers.Alt) != 0)
                         {
                             menu = Menu.Delete;
                         };
@@ -195,7 +206,7 @@ namespace Product_Inventory
                     }
                 case ConsoleKey.A:
                     {
-                        if ((keyEnter.Modifiers & ConsoleModifiers.Control) != 0)
+                        if ((keyEnter.Modifiers & ConsoleModifiers.Alt) != 0)
                         {
                             menu = Menu.Add;
                         }
@@ -203,7 +214,7 @@ namespace Product_Inventory
                     }
                 case ConsoleKey.P:
                     {
-                        if ((keyEnter.Modifiers & ConsoleModifiers.Control) != 0)
+                        if ((keyEnter.Modifiers & ConsoleModifiers.Alt) != 0)
                         {
                             menu = Menu.PrintConsol;
                         }
@@ -211,15 +222,15 @@ namespace Product_Inventory
                     }
                 case ConsoleKey.Q:
                     {
-                        if ((keyEnter.Modifiers & ConsoleModifiers.Control) != 0)
+                        if ((keyEnter.Modifiers & ConsoleModifiers.Alt) != 0)
                         {
-                            menu = Menu.Close;
+                            menu = Menu.Change;
                         }
                         break;
                     }
                 case ConsoleKey.S:
                     {
-                        if ((keyEnter.Modifiers & ConsoleModifiers.Control) != 0)
+                        if ((keyEnter.Modifiers & ConsoleModifiers.Alt) != 0)
                         {
                             menu = Menu.Save;
                         }
@@ -227,7 +238,7 @@ namespace Product_Inventory
                     }
                 case ConsoleKey.L:
                     {
-                        if ((keyEnter.Modifiers & ConsoleModifiers.Control) != 0)
+                        if ((keyEnter.Modifiers & ConsoleModifiers.Alt) != 0)
                         {
                             menu = Menu.Load;
                         }
@@ -235,12 +246,13 @@ namespace Product_Inventory
                     }
                 case ConsoleKey.T:
                     {
-                        if ((keyEnter.Modifiers & ConsoleModifiers.Control) != 0)
+                        if ((keyEnter.Modifiers & ConsoleModifiers.Alt) != 0)
                         {
                             menu = Menu.Summ;
                         }
                         break;
                     }
+               
 
             }
             return menu;

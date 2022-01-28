@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,18 +14,19 @@ namespace InventoryLibrary
         public decimal UnitPrice;
         public double NumberUnits;
 
-        public Product(string NameProduct, decimal UnitPrice, double NumberUnits, List<Product> ListProducts)
+        //[JsonConstructor]
+        public Product(string NameProduct, decimal UnitPrice, double NumberUnits, int ProductID)
         {
             this.NameProduct = NameProduct;
             this.UnitPrice = UnitPrice;
             this.NumberUnits = NumberUnits;
-            _ProductID = GetID(ListProducts);
+            _ProductID = ProductID;
         }
 
         public int ProductID
         {
             get { return _ProductID; }
-            set { _ProductID = value; }
+            private set {_ProductID = value < 1 ? 1:value;}
         }
 
         //стоимость в одной позиции товара
@@ -34,23 +36,7 @@ namespace InventoryLibrary
         }
 
             // Выбирает максимальный ProductID из списка и увеличивает на 1
-        private int GetID(List<Product> products)
-        {   
-        int i=0;
-        int id=1;
-            if (products!=null && products.Count > 0 )
-            {
-                int[] ArrayID = new int[products.Count];
-                foreach(Product prd in products)
-                {
-                    ArrayID[i] = prd.ProductID;
-                        i++;
-                }
-                id = ArrayID.Max()+1;
-            }
-        return id;
-
-        }
+       
 
         //переопределения методов
         public override string ToString()
@@ -72,12 +58,12 @@ namespace InventoryLibrary
             return ProductID == tmp.ProductID;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null) return false;
-            int tmp = (int)obj;
-            return ProductID == tmp;
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    if (obj == null) return false;
+        //    int tmp = (int)obj;
+        //    return ProductID == tmp;
+        //}
 
         public static bool operator == (Product product, int Id)
         {

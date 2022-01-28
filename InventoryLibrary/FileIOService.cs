@@ -35,12 +35,15 @@ namespace InventoryLibrary
             }
             else
             {
+                List<Product>? data = null;
+
                 using (StreamReader reader = File.OpenText(_path))
                 {
                     string fileText = File.ReadAllText(_path);//считывание файла
-                    return JsonConvert.DeserializeObject<List<Product>>(fileText);// конвертация Json в список
+                    data = JsonConvert.DeserializeObject<List<Product>>(fileText);// конвертация Json в список
                     
                 }
+                return data ?? new List<Product>();
             }
                 
             
