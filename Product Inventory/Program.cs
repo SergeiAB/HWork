@@ -64,13 +64,11 @@ namespace Product_Inventory
                             string NumUnit = Console.ReadLine();
                             Console.WriteLine();
                             double NumberUnits = CheckEnterNumber(NumUnit, msgError, 0.001);
-
                             Console.WriteLine();
                             Console.WriteLine("Введите стоимость еденицы товара:");
                             string PriceUnit = Console.ReadLine();
                             Console.WriteLine();
                             decimal UnitPrice = (decimal)CheckEnterNumber(PriceUnit, msgError, 0.01);
-
                             SheetProduct.Add(new Product(NameProduct, UnitPrice, NumberUnits, SheetProduct));
                             inventori.PrintSheet(SheetProduct);
                             break;
@@ -78,11 +76,7 @@ namespace Product_Inventory
                     case Menu.Delete:
                         {
                             Console.WriteLine("Удалить запись из таблицы списком...");
-                            //Console.WriteLine("Введите инвентарный №\nдля удаления товара:");
-                            //int DeleteProdID = CheckEnterNumber(Console.ReadLine(), msgError, 1);
-                            //Console.WriteLine();
-                            //inventori.DeleteProduct(SheetProduct, DeleteProdID);
-                            Console.WriteLine("введите ID товаров через \"+\" например 2+4+7 или 4:");
+                            Console.WriteLine("введите ID товаров через \"-\" например 2-4-7 или 4:");
                             string Summ = Console.ReadLine();
                             Console.WriteLine();
                             Summ = IsTextNullLen(Summ, msgError);
@@ -110,8 +104,7 @@ namespace Product_Inventory
                             string Summ = Console.ReadLine();
                             Console.WriteLine();
                             Summ = IsTextNullLen(Summ,msgError);
-                            inventori.SummProdukt(SheetProduct, Summ);
-                            
+                            inventori.SummProduktList(SheetProduct, Summ);
                             break;
                         }
                     case Menu.Null:
@@ -180,24 +173,6 @@ namespace Product_Inventory
 
             } while (!flag);
             return Math.Round(number, 3);
-        }
-
-        static int CheckEnterNumber(string enterText, string message, int minValue)
-        {
-            bool flag;
-            int number;
-            do
-            {
-                flag = int.TryParse(enterText, out number);
-                if (!flag || number < minValue)
-                {
-                    Console.WriteLine(message);
-                    flag = false;
-                    enterText = Console.ReadLine();
-                }
-
-            } while (!flag);
-            return number;
         }
 
         // перехват клавиш управления

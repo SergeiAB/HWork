@@ -25,14 +25,14 @@ namespace InventoryLibrary
         }
 
         //Печать списка товаров в ведомости
-        public void PrintSheet(List<Product> product, bool total=true, bool title =true)
+        public void PrintSheet(List<Product> product, bool total = true, bool title = true)
         {
             if (title)
             {
                 Console.WriteLine(new String('-', 70));
                 Console.WriteLine("| {0,-5} | {1,-15} | {2,-10} | {3,-12} | {4,-12} |", "Инв №", "Наименование", "Кол-во ед.", "Цена за ед.", "Всего:");
             }
-            
+
             Console.WriteLine(new String('-', 70));
             foreach (Product prod in product)
             {
@@ -46,44 +46,11 @@ namespace InventoryLibrary
                 Console.WriteLine("|{0,52} | {1,12} |", "Итого:", inTotal.ToString("c2"));
                 Console.WriteLine(new String('-', 70));
             }
-            
-        }
-
-
-        //удаление из списка по выбранному ID товара
-        public void DeleteProduct(List<Product> product,int DeleteProdID)
-        {
-            if (product.Exists(x => x.ProductID == DeleteProdID))
-            {
-                var print = product.FindAll(x => x.ProductID == DeleteProdID);
-                Console.WriteLine($"Вы удалили Продукт с ID= {DeleteProdID}");
-                PrintSheet(print,false,false);
-                product.RemoveAll(x => x.ProductID == DeleteProdID);
-            }
-            else
-            {
-                Console.WriteLine($"Продукта с ID= {DeleteProdID} в списке нет!\nДля удаления выберите CTRL+D.");
-            }
-            
 
         }
 
-        //возвращает индекс в листе продукта по его ID
-        public int GetIndex(List<Product> product,int IDProduct)
-        {
-            int index;
-            for (index = 0; index < product.Count; index++)
-            {
-                if (product[index].ProductID == IDProduct)
-                {
-                    break;
-                }
-            }
-            return index;
-        }
-        
         //сумирует товары
-        public void SummProdukt(List<Product> product, string strKitsummId)
+        public void SummProduktList(List<Product> product, string strKitsummId)
         {       
             string[] str = strKitsummId.Trim('+').Split('+');//закидываем в массив строку из символов
             int[] IDprod = new int[str.Length];
@@ -116,10 +83,10 @@ namespace InventoryLibrary
             }
             PrintSheet(ProdSumm);
         }
-
+        // удаляет продукты
         public void DeleteProduсtList(List<Product> product, string strKitsummId)
         {
-            string[] str = strKitsummId.Trim('+').Split('+');//закидываем в массив строку из символов
+            string[] str = strKitsummId.Trim('-').Split('-');//закидываем в массив строку из символов
             int[] IDprod = new int[str.Length];
             for (int i = 0; i < str.Length; i++)//в массив int копируем строчный массив
             {
@@ -133,13 +100,41 @@ namespace InventoryLibrary
                     return;
                 }
             }
-            //List<Product> ProdSumm = new List<Product>();//создаем новый список
+            if(IDprod.Length >1)
+            {
+                for (int i = 0; i < IDprod.Length - 1; i++)// 
+                {
+                    for (int j = i+1; j < IDprod.Length; j++)
+                    {
+                        if (IDprod[i] == IDprod[j])
+                        {
+                            Console.WriteLine("Повторяется ID продукта!!!\nПродолжить CTRL+D.");
+                            return;
+                        }
+                    }
+                }
+            }
+          
+
             for (int i = 0; i < IDprod.Length; i++)
             {
-
-                DeleteProduct(product, IDprod[i]);
-
+                if (!product.Exists(x => x.ProductID == IDprod[i]))
+                {   
+                   Console.WriteLine($"Товара с ID={IDprod[i]} в списке нет....\n" +
+                       $"Продолжить CTRL+D");
+                    return;
+                }
             }
+
+            List<Product> prodSumm = new List<Product>();//создаем новый список
+            for (int i = 0; i < IDprod.Length; i++)
+            {
+                prodSumm.Add(product.Find(x => x.ProductID == IDprod[i]));
+
+                product.RemoveAll(x => x.ProductID == IDprod[i]);
+            }
+            Console.WriteLine($"Вы удалили продукты:");
+            PrintSheet(prodSumm);
             Console.WriteLine("Осталось продуктов  в списке....");
             PrintSheet(product);
             Console.WriteLine("Сохранить изменеия CTRL+S.\nОтменить изменения CTRL+L.");
