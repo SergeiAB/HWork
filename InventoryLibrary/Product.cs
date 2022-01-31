@@ -35,9 +35,7 @@ namespace InventoryLibrary
             return UnitPrice * (decimal)NumberUnits;
         }
 
-            // Выбирает максимальный ProductID из списка и увеличивает на 1
        
-
         //переопределения методов
         public override string ToString()
         {
@@ -58,12 +56,12 @@ namespace InventoryLibrary
             return ProductID == tmp.ProductID;
         }
 
-        //public override bool Equals(object obj)
-        //{
-        //    if (obj == null) return false;
-        //    int tmp = (int)obj;
-        //    return ProductID == tmp;
-        //}
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            int tmp = (int)obj;
+            return ProductID == tmp;
+        }
 
         public static bool operator == (Product product, int Id)
         {

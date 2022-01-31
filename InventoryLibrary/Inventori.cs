@@ -102,13 +102,13 @@ namespace InventoryLibrary
             }
             if(IDprod.Length >1)
             {
-                for (int i = 0; i < IDprod.Length - 1; i++)// 
+                for (int i = 0; i < IDprod.Length - 1; i++)
                 {
                     for (int j = i+1; j < IDprod.Length; j++)
                     {
                         if (IDprod[i] == IDprod[j])
                         {
-                            Console.WriteLine("Повторяется ID продукта!!!\nПродолжить CTRL+D.");
+                            Console.WriteLine("Повторяется ID продукта!!!\nПродолжить ALT+D.");
                             return;
                         }
                     }
@@ -121,7 +121,7 @@ namespace InventoryLibrary
                 if (!product.Exists(x => x.ProductID == IDprod[i]))
                 {   
                    Console.WriteLine($"Товара с ID={IDprod[i]} в списке нет....\n" +
-                       $"Продолжить CTRL+D");
+                       $"Продолжить ALT+D");
                     return;
                 }
             }
@@ -139,7 +139,6 @@ namespace InventoryLibrary
             PrintSheet(product);
             Console.WriteLine("Сохранить изменеия CTRL+S.\nОтменить изменения CTRL+L.");
         }
-
 
 
 

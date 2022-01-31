@@ -120,7 +120,52 @@ namespace Product_Inventory
                         }
                     case Menu.Change:
                         {
-                            Console.WriteLine(menu.ToString());
+                            Console.WriteLine("Изменить запись в таблице ...");
+                            Console.WriteLine("Введите ID товара.... ");
+                            string strChange = Console.ReadLine();
+
+                            int changeID = CheckEnterNumber(strChange, msgError, 1);
+
+                            if (SheetProduct.Exists(x => x.ProductID == changeID))
+                            {
+
+                                int index = SheetProduct.FindIndex(x => x.ProductID == changeID);
+
+                                Console.WriteLine("Введите наименование товара, не более 15 символов:");
+                                string NameProduct = Console.ReadLine();
+
+                                if (!string.IsNullOrEmpty(NameProduct.Trim()))
+                                {
+                                    NameProduct = IsTextNullLen(NameProduct, msgError);
+                                    SheetProduct[index].NameProduct = NameProduct;
+                                }
+
+                                Console.WriteLine("Введите количество едениц товара:");
+                                string NumUnit = Console.ReadLine();
+
+                                if (!string.IsNullOrEmpty(NumUnit.Trim()))
+                                {
+                                    double NumberUnits = CheckEnterNumber(NumUnit, msgError, 0.001);
+                                    SheetProduct[index].NumberUnits = NumberUnits;
+                                }
+
+                                Console.WriteLine("Введите стоимость еденицы товара:");
+                                string PriceUnit = Console.ReadLine();
+
+                                if (!string.IsNullOrEmpty(PriceUnit.Trim()))
+                                {
+                                    decimal UnitPrice = (decimal)CheckEnterNumber(PriceUnit, msgError, 0.01);
+                                    SheetProduct[index].UnitPrice = UnitPrice;
+                                }
+                                inventori.PrintSheet(SheetProduct);
+
+                            }
+                            else
+                            { 
+                               Console.WriteLine($"Товара с ID={changeID} в списке нет....\n" +
+                                                 $"Продолжить ALT+Q.");
+                            }
+
                             break;
                         }
 
@@ -134,14 +179,14 @@ namespace Product_Inventory
         static void MenuShow()
         {
             Console.WriteLine("--МЕНЮ" + new String('-', 33));
-            Console.WriteLine("| Добавить новую запись: ALT+A        |\n" +
-                              "| Удалить запись: ALT+D               |\n" +
-                              "| Стоимость выбранных товаров: ALT+T  |\n" +
-                              "| Показать список товаров: ALT+P      |\n" +
-                              "| Сохранить изменения: ALT+S          |\n" +
-                              "| Закрыть программу: CTRL+С           |\n" +
-                              "| Измениь продукт: ALT+Q              |\n" +
-                              "| Загрузить файл: ALT+L               |");
+            Console.WriteLine("| Добавить новую запись: ALT+A             |\n" +
+                              "| Удалить запись: ALT+D                    |\n" +
+                              "| Стоимость выбранных товаров: ALT+T       |\n" +
+                              "| Показать список товаров: ALT+P           |\n" +
+                              "| Сохранить изменения: ALT+S               |\n" +
+                              "| Закрыть программу без сохранения: CTRL+С |\n" +
+                              "| Измениь продукт: ALT+Q                   |\n" +
+                              "| Загрузить список из файла: ALT+L         |");
             Console.Write(new String('-', 39));
             Console.WriteLine();
         }
@@ -167,14 +212,14 @@ namespace Product_Inventory
 
         }
 
-        //метод для проверки вводимых значений с консоли на число и по условию > minValue
+        //методы для проверки вводимых значений с консоли на число и по условию > minValue
         static double CheckEnterNumber(string enterText, string message, double minValue)
         {
             bool flag;
             double number;
             do
             {
-                flag = double.TryParse(enterText, out number);
+                flag = double.TryParse(enterText.Replace(".",","), out number);
                 if (!flag || number < minValue)
                 {
                     Console.WriteLine(message);
@@ -184,6 +229,24 @@ namespace Product_Inventory
 
             } while (!flag);
             return Math.Round(number, 3);
+        }
+
+        static int CheckEnterNumber(string enterText, string message, int minValue)
+        {
+            bool flag;
+            int number;
+            do
+            {
+                flag = int.TryParse(enterText, out number);
+                if (!flag || number < minValue)
+                {
+                    Console.WriteLine(message);
+                    flag = false;
+                    enterText = Console.ReadLine();
+                }
+
+            } while (!flag);
+            return number;
         }
 
         // перехват клавиш управления

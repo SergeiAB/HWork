@@ -24,14 +24,8 @@ namespace InventoryLibrary
             bool fileExis = File.Exists(_path);// проверка наличия файла
             if (!fileExis)
             {
-                using (File.CreateText(_path)) { }
-                
-
-                //создание файла по указанному пути
-                
-                //Console.WriteLine("Create file " + _path);
+                File.CreateText(_path).Dispose();//создание файла по указанному пути
                 return new List<Product>();
-                 
             }
             else
             {
