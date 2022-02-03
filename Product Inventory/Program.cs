@@ -23,7 +23,7 @@ namespace Product_Inventory
 
         static void Main(string[] args)
         {
-            List<Product> SheetProduct = new();
+            List<Product> SheetProduct=new();
             FileIOService FileIoService = new(Path);
             Inventori inventori = new();
             Menu menu = Menu.Load;
@@ -55,7 +55,6 @@ namespace Product_Inventory
                         }
                     case Menu.Add:
                         {
-                            //Console.Clear();
                             Console.WriteLine("Добавить новую запись в таблицу....");
                             Console.WriteLine("Введите наименование товара, не более 15 символов:");
                             string NameProduct = Console.ReadLine();
@@ -125,11 +124,12 @@ namespace Product_Inventory
                             string strChange = Console.ReadLine();
 
                             int changeID = CheckEnterNumber(strChange, msgError, 1);
-
-                            if (SheetProduct.Exists(x => x.ProductID == changeID))
+                            // if (SheetProduct.Exists(x => x.ProductID == changeID))
+                            int index = SheetProduct.FindIndex(x => x.ProductID == changeID);
+                            if (index!=-1)
                             {
 
-                                int index = SheetProduct.FindIndex(x => x.ProductID == changeID);
+                               //int index = SheetProduct.FindIndex(x => x.ProductID == changeID);
 
                                 Console.WriteLine("Введите наименование товара, не более 15 символов:");
                                 string NameProduct = Console.ReadLine();
@@ -215,30 +215,46 @@ namespace Product_Inventory
         //методы для проверки вводимых значений с консоли на число и по условию > minValue
         static double CheckEnterNumber(string enterText, string message, double minValue)
         {
-            bool flag;
-            double number;
-            do
-            {
-                flag = double.TryParse(enterText.Replace(".",","), out number);
-                if (!flag || number < minValue)
-                {
-                    Console.WriteLine(message);
-                    flag = false;
-                    enterText = Console.ReadLine();
-                }
 
-            } while (!flag);
-            return Math.Round(number, 3);
+            return CheckEnterNumber<double>(enterText.Replace('.',','), message, (x) =>
+            {
+                var isParced = double.TryParse(x, out var resulValue);
+                if (isParced)
+                {
+                    resulValue = Math.Round(resulValue, 3);
+                }
+                return (isParced, resulValue);
+
+            },
+           (x) => x < minValue);
+
         }
 
         static int CheckEnterNumber(string enterText, string message, int minValue)
         {
+            return CheckEnterNumber<int>(enterText, message, (x) =>
+            {
+                var isParced = int.TryParse(x, out var resulValue);
+                return (isParced, resulValue);
+
+            },
+            (x) => x < minValue);
+
+        }
+
+
+        static T CheckEnterNumber<T>(string enterText,
+            string message,
+            Func<string,(bool,T)>tryparse,
+            Func<T,bool> check)
+        {
             bool flag;
-            int number;
+            T number;
             do
             {
-                flag = int.TryParse(enterText, out number);
-                if (!flag || number < minValue)
+                (flag,number)=tryparse(enterText);
+               
+                if (!flag || check(number))
                 {
                     Console.WriteLine(message);
                     flag = false;

@@ -137,7 +137,7 @@ namespace InventoryLibrary
             PrintSheet(prodSumm);
             Console.WriteLine("Осталось продуктов  в списке....");
             PrintSheet(product);
-            Console.WriteLine("Сохранить изменеия CTRL+S.\nОтменить изменения CTRL+L.");
+            Console.WriteLine("Сохранить изменеия ALT+S.\nОтменить изменения ALT+L.");
         }
 
 
