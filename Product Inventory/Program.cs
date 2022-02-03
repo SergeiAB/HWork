@@ -23,8 +23,8 @@ namespace Product_Inventory
 
         static void Main(string[] args)
         {
-            List<Product> SheetProduct=new();
-            FileIOService FileIoService = new(Path);
+            List<Product> sheetProduct=new();
+            FileIOService fileIoService = new(Path);
             Inventori inventori = new();
             Menu menu = Menu.Load;
             Console.Title = "Ведомость по инвентаризации";
@@ -37,8 +37,8 @@ namespace Product_Inventory
                     case Menu.Load:
                         {
                             Console.WriteLine("Загрузка данных из файла.....");
-                            SheetProduct = FileIoService.LoadData();
-                            if (SheetProduct.Count == 0)
+                            sheetProduct = fileIoService.LoadData();
+                            if (sheetProduct.Count == 0)
                             {
                                 Console.WriteLine("В списке товаров нет записей !!!\nДобавте новую запись в список:");
 
@@ -48,7 +48,7 @@ namespace Product_Inventory
                             }
                             else
                             {
-                                inventori.PrintSheet(SheetProduct);
+                                inventori.PrintSheet(sheetProduct);
                             }
                             break;
 
@@ -57,24 +57,24 @@ namespace Product_Inventory
                         {
                             Console.WriteLine("Добавить новую запись в таблицу....");
                             Console.WriteLine("Введите наименование товара, не более 15 символов:");
-                            string NameProduct = Console.ReadLine();
+                            string nameProduct = Console.ReadLine();
                             
-                            NameProduct = IsTextNullLen(NameProduct, msgError);
+                            nameProduct = IsTextNullLen(nameProduct, msgError);
                            
                             Console.WriteLine("Введите количество едениц товара:");
-                            string NumUnit = Console.ReadLine();
+                            string numUnit = Console.ReadLine();
                             
-                            double NumberUnits = CheckEnterNumber(NumUnit, msgError, 0.001);
+                            double numberUnits = CheckEnterNumber(numUnit, msgError, 0.001);
                            
                             Console.WriteLine("Введите стоимость еденицы товара:");
-                            string PriceUnit = Console.ReadLine();
+                            string priceUnit = Console.ReadLine();
                            
-                            decimal UnitPrice = (decimal)CheckEnterNumber(PriceUnit, msgError, 0.01);
+                            decimal unitPrice = (decimal)CheckEnterNumber(priceUnit, msgError, 0.01);
 
                            
-                            int IdProduct = IDGenerator.GetID(SheetProduct);
-                            SheetProduct.Add(new Product(NameProduct, UnitPrice, NumberUnits,IdProduct));
-                            inventori.PrintSheet(SheetProduct);
+                            int IdProduct = IDGenerator.GetID(sheetProduct);
+                            sheetProduct.Add(new Product(nameProduct, unitPrice, numberUnits,IdProduct));
+                            inventori.PrintSheet(sheetProduct);
                             
                             break;
                         }
@@ -82,34 +82,34 @@ namespace Product_Inventory
                         {
                             Console.WriteLine("Удалить запись из таблицы списком...");
                             Console.WriteLine("введите ID товаров через \"-\" например 2-4-7 или 4:");
-                            string Summ = Console.ReadLine();
+                            string summ = Console.ReadLine();
                            
-                            Summ = IsTextNullLen(Summ, msgError);
-                            inventori.DeleteProduсtList(SheetProduct,Summ); 
+                            summ = IsTextNullLen(summ, msgError);
+                            inventori.DeleteProduсtList(sheetProduct,summ); 
                             break;
                         }
                     case Menu.Save:
                         {
                             Console.WriteLine("Сохранить текущие изменения в файл....");
-                            FileIoService.SaveData(SheetProduct);
-                            SheetProduct = FileIoService.LoadData();
-                            inventori.PrintSheet(SheetProduct);
+                            fileIoService.SaveData(sheetProduct);
+                            sheetProduct = fileIoService.LoadData();
+                            inventori.PrintSheet(sheetProduct);
                             break;
                         }
                     case Menu.PrintConsol:
                         {
                             Console.WriteLine("Печать текущей таблицы....");
-                            inventori.PrintSheet(SheetProduct);
+                            inventori.PrintSheet(sheetProduct);
                             break;
                         }
                     case Menu.Summ:
                         {
                             Console.WriteLine("Сложение стоимости товаров...");
                             Console.WriteLine("введите ID товаров через \"+\" например 2+4+7:");
-                            string Summ = Console.ReadLine();
+                            string summ = Console.ReadLine();
                             
-                            Summ = IsTextNullLen(Summ,msgError);
-                            inventori.SummProduktList(SheetProduct, Summ);
+                            summ = IsTextNullLen(summ,msgError);
+                            inventori.SummProduktList(sheetProduct, summ);
                             break;
                         }
                     case Menu.Null:
@@ -125,39 +125,39 @@ namespace Product_Inventory
 
                             int changeID = CheckEnterNumber(strChange, msgError, 1);
                             // if (SheetProduct.Exists(x => x.ProductID == changeID))
-                            int index = SheetProduct.FindIndex(x => x.ProductID == changeID);
+                            int index = sheetProduct.FindIndex(x => x.productID == changeID);
                             if (index!=-1)
                             {
 
                                //int index = SheetProduct.FindIndex(x => x.ProductID == changeID);
 
                                 Console.WriteLine("Введите наименование товара, не более 15 символов:");
-                                string NameProduct = Console.ReadLine();
+                                string nameProduct = Console.ReadLine();
 
-                                if (!string.IsNullOrEmpty(NameProduct.Trim()))
+                                if (!string.IsNullOrEmpty(nameProduct.Trim()))
                                 {
-                                    NameProduct = IsTextNullLen(NameProduct, msgError);
-                                    SheetProduct[index].NameProduct = NameProduct;
+                                    nameProduct = IsTextNullLen(nameProduct, msgError);
+                                    sheetProduct[index].nameProduct = nameProduct;
                                 }
 
                                 Console.WriteLine("Введите количество едениц товара:");
-                                string NumUnit = Console.ReadLine();
+                                string numUnit = Console.ReadLine();
 
-                                if (!string.IsNullOrEmpty(NumUnit.Trim()))
+                                if (!string.IsNullOrEmpty(numUnit.Trim()))
                                 {
-                                    double NumberUnits = CheckEnterNumber(NumUnit, msgError, 0.001);
-                                    SheetProduct[index].NumberUnits = NumberUnits;
+                                    double NumberUnits = CheckEnterNumber(numUnit, msgError, 0.001);
+                                    sheetProduct[index].numberUnits = NumberUnits;
                                 }
 
                                 Console.WriteLine("Введите стоимость еденицы товара:");
-                                string PriceUnit = Console.ReadLine();
+                                string priceUnit = Console.ReadLine();
 
-                                if (!string.IsNullOrEmpty(PriceUnit.Trim()))
+                                if (!string.IsNullOrEmpty(priceUnit.Trim()))
                                 {
-                                    decimal UnitPrice = (decimal)CheckEnterNumber(PriceUnit, msgError, 0.01);
-                                    SheetProduct[index].UnitPrice = UnitPrice;
+                                    decimal UnitPrice = (decimal)CheckEnterNumber(priceUnit, msgError, 0.01);
+                                    sheetProduct[index].unitPrice = UnitPrice;
                                 }
-                                inventori.PrintSheet(SheetProduct);
+                                inventori.PrintSheet(sheetProduct);
 
                             }
                             else
@@ -192,23 +192,23 @@ namespace Product_Inventory
         }
 
         //Проверка наименования
-        static string IsTextNullLen(string Text, string Messag)
+        static string IsTextNullLen(string text, string message)
         {
-            Text = Text.Trim(' ');
-            while (string.IsNullOrEmpty(Text))
+            text = text.Trim(' ');
+            while (string.IsNullOrEmpty(text))
             {
-                Console.WriteLine(Messag);
-                Text = Console.ReadLine().Trim(' ');
+                Console.WriteLine(message);
+                text = Console.ReadLine().Trim(' ');
             }
-            Text = Text.Trim().ToLower();
-            if (Text.Length > 15)
+            text = text.Trim().ToLower();
+            if (text.Length > 15)
             {
-                Text = Text.Substring(0, 15);
+                text = text.Substring(0, 15);
             }
             //написание с большой буквы
-            char tmp = char.ToUpper(Text[0]);
-            Text = Text.Substring(1, Text.Length - 1);
-            return $"{tmp}{Text}";
+            char tmp = char.ToUpper(text[0]);
+            text = text.Substring(1, text.Length - 1);
+            return $"{tmp}{text}";
 
         }
 

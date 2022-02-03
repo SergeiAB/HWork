@@ -14,13 +14,13 @@ namespace InventoryLibrary
             int id = 1;
             if (products != null && products.Count > 0)
             {
-                int[] ArrayID = new int[products.Count];
+                int[] arrayID = new int[products.Count];
                 foreach (Product prd in products)
                 {
-                    ArrayID[i] = prd.ProductID;
+                    arrayID[i] = prd.productID;
                     i++;
                 }
-                id = ArrayID.Max() + 1;
+                id = arrayID.Max() + 1;
             }
             return id;
 
