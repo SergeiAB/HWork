@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InventoryLibrary
 {
-    public class Product
+    public class Product:IProduct
     {
         private int _productID;
         public string nameProduct;
@@ -44,34 +44,34 @@ namespace InventoryLibrary
             return str;
         }
         //переопределяем методы и операторы сравнения
-        public override int GetHashCode()
-        {
-            return productID;
-        }
+        //public override int GetHashCode()
+        //{
+        //    return productID;
+        //}
 
-        public bool Equals(Product prod)
-        {
-            if (prod == null) return false;
-            Product tmp = prod as Product;
-            return productID == tmp.productID;
-        }
+        //public bool Equals(Product prod)
+        //{
+        //    if (prod == null) return false;
+        //    Product tmp = prod as Product;
+        //    return productID == tmp.productID;
+        //}
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null) return false;
-            int tmp = (int)obj;
-            return productID == tmp;
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    if (obj == null) return false;
+        //    int tmp = (int)obj;
+        //    return productID == tmp;
+        //}
 
-        public static bool operator == (Product product, int Id)
-        {
-            return product.productID == Id;
-        }
+        //public static bool operator == (Product product, int Id)
+        //{
+        //    return product.productID == Id;
+        //}
 
-        public static bool operator != (Product product, int Id)
-        {
-            return !(product.productID == Id);
-        }
+        //public static bool operator != (Product product, int Id)
+        //{
+        //    return !(product.productID == Id);
+        //}
 
 
     }
