@@ -126,7 +126,7 @@ namespace InventoryLibrary
                 }
             }
 
-            List<Product> prodSumm = new List<Product>();//создаем новый список
+            List<Product> prodSumm = new();//создаем новый список
             for (int i = 0; i < idProd.Length; i++)
             {
                 prodSumm.Add(product.Find(x => x.productID == idProd[i]));

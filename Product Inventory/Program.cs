@@ -19,16 +19,19 @@ namespace Product_Inventory
             Summ//сумма выбранных товаров
         }
 
-        static string Path = $"{Environment.CurrentDirectory}\\InventDataList.json";
+        
 
         static void Main(string[] args)
         {
+            Console.Title = "Ведомость по инвентаризации";
+            string msgError = "Ошибка ввода, попробуйте еще раз:";
+            string Path = $"{Environment.CurrentDirectory}\\InventDataList.json";
             List<Product> sheetProduct=new();
             FileIOService fileIoService = new(Path);
             Inventori inventori = new();
+
             Menu menu = Menu.Load;
-            Console.Title = "Ведомость по инвентаризации";
-            string msgError = "Ошибка ввода, попробуйте еще раз:";
+            
             MenuShow();
             do
             {
@@ -40,7 +43,7 @@ namespace Product_Inventory
                             sheetProduct = fileIoService.LoadData();
                             if (sheetProduct.Count == 0)
                             {
-                                Console.WriteLine("В списке товаров нет записей !!!\nДобавте новую запись в список:");
+                                Console.WriteLine("В списке товаров нет записей !!!");
 
                                 menu = Menu.Add;
 
@@ -124,12 +127,12 @@ namespace Product_Inventory
                             string strChange = Console.ReadLine();
 
                             int changeID = CheckEnterNumber(strChange, msgError, 1);
-                            // if (SheetProduct.Exists(x => x.ProductID == changeID))
+                            
                             int index = sheetProduct.FindIndex(x => x.productID == changeID);
+                            
                             if (index!=-1)
                             {
-
-                               //int index = SheetProduct.FindIndex(x => x.ProductID == changeID);
+                                var ms = sheetProduct[index];
 
                                 Console.WriteLine("Введите наименование товара, не более 15 символов:");
                                 string nameProduct = Console.ReadLine();
@@ -137,7 +140,9 @@ namespace Product_Inventory
                                 if (!string.IsNullOrEmpty(nameProduct.Trim()))
                                 {
                                     nameProduct = IsTextNullLen(nameProduct, msgError);
-                                    sheetProduct[index].nameProduct = nameProduct;
+                                        ms.nameProduct = nameProduct;
+                                        sheetProduct[index] = ms;
+                                    //sheetProduct[index].nameProduct = nameProduct;
                                 }
 
                                 Console.WriteLine("Введите количество едениц товара:");
@@ -146,7 +151,9 @@ namespace Product_Inventory
                                 if (!string.IsNullOrEmpty(numUnit.Trim()))
                                 {
                                     double NumberUnits = CheckEnterNumber(numUnit, msgError, 0.001);
-                                    sheetProduct[index].numberUnits = NumberUnits;
+                                        ms.numberUnits = NumberUnits;
+                                        sheetProduct[index] = ms;
+                                    //sheetProduct[index].numberUnits = NumberUnits;
                                 }
 
                                 Console.WriteLine("Введите стоимость еденицы товара:");
@@ -155,7 +162,9 @@ namespace Product_Inventory
                                 if (!string.IsNullOrEmpty(priceUnit.Trim()))
                                 {
                                     decimal UnitPrice = (decimal)CheckEnterNumber(priceUnit, msgError, 0.01);
-                                    sheetProduct[index].unitPrice = UnitPrice;
+                                        ms.unitPrice = UnitPrice; ;
+                                        sheetProduct[index] = ms;
+                                    //sheetProduct[index].unitPrice = UnitPrice;
                                 }
                                 inventori.PrintSheet(sheetProduct);
 
@@ -178,7 +187,7 @@ namespace Product_Inventory
         //Вывод на консоль клавиш управления програмой
         static void MenuShow()
         {
-            Console.WriteLine("--МЕНЮ" + new String('-', 33));
+            Console.WriteLine("--МЕНЮ" + new String('-', 38));
             Console.WriteLine("| Добавить новую запись: ALT+A             |\n" +
                               "| Удалить запись: ALT+D                    |\n" +
                               "| Стоимость выбранных товаров: ALT+T       |\n" +
@@ -187,7 +196,7 @@ namespace Product_Inventory
                               "| Закрыть программу без сохранения: CTRL+С |\n" +
                               "| Измениь продукт: ALT+Q                   |\n" +
                               "| Загрузить список из файла: ALT+L         |");
-            Console.Write(new String('-', 39));
+            Console.Write(new String('-', 44));
             Console.WriteLine();
         }
 

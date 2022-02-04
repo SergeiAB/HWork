@@ -9,6 +9,8 @@ namespace InventoryLibrary
     public interface IProduct
     {
         int productID { get; }
+        
+
         string ToString();
         decimal AmountPrice();
     }

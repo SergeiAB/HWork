@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace InventoryLibrary
 {
-    public class Product:IProduct
+    public struct Product
     {
         private int _productID;
         public string nameProduct;
         public decimal unitPrice;
         public double numberUnits;
 
-        //[JsonConstructor]
+        [JsonConstructor]
         public Product(string nameProduct, decimal unitPrice, double numberUnits, int productID)
         {
             this.nameProduct = nameProduct;
