@@ -59,6 +59,7 @@ namespace ObserverInterfase
                 {
                     client.OnNext(mail);
                 }
+                
 
             }
         }
